@@ -25,7 +25,7 @@ public class PasswordControllerIntegrationTest {
         mockMvc.perform(post("/passwords/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(passwordJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
