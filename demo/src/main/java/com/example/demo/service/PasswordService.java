@@ -31,6 +31,10 @@ public class PasswordService {
         return passwordRepository.findByUserId(userId);
     }
 
+    public Password findById(Long id) {
+        return passwordRepository.findById(id).orElse(null);
+    }
+
     public String generatePassword(int length) {
         if (length < 1)
             throw new IllegalArgumentException("Password length must be greater than 0");

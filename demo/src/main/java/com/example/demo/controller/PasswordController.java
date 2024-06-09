@@ -57,4 +57,23 @@ public class PasswordController {
         List<Password> passwords = passwordService.getPasswordsByUserId(user.getId());
         return ResponseEntity.ok(passwords);
     }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<Password> updatePassword(@PathVariable Long id, @RequestBody Password updatedPassword) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        Password existingPassword = passwordService.findById(id);
+        if (existingPassword == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else if (!existingPassword.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        existingPassword.setPassword(updatedPassword.getPassword());
+        existingPassword.setSiteUrl(updatedPassword.getSiteUrl());
+        Password savedPassword = passwordService.savePassword(existingPassword);
+
+        return ResponseEntity.ok(savedPassword);
+    }
 }

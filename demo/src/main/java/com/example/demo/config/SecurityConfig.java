@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login", "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/passwords/add", "/passwords/generate").authenticated()
                 .requestMatchers(HttpMethod.GET, "/passwords").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/passwords/edit/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
