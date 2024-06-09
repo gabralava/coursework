@@ -27,6 +27,11 @@ public class PasswordService {
         return passwordRepository.save(password);
     }
 
+    @Transactional
+    public void deletePassword(Long id) {
+        passwordRepository.deleteById(id);
+    }
+
     public List<Password> getPasswordsByUserId(Long userId) {
         return passwordRepository.findByUserId(userId);
     }

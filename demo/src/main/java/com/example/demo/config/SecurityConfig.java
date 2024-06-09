@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/passwords/add", "/passwords/generate").authenticated()
                 .requestMatchers(HttpMethod.GET, "/passwords").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/passwords/edit/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/passwords/delete/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

@@ -76,4 +76,20 @@ public class PasswordController {
 
         return ResponseEntity.ok(savedPassword);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deletePassword(@PathVariable Long id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        Password existingPassword = passwordService.findById(id);
+        if (existingPassword == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else if (!existingPassword.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        passwordService.deletePassword(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
