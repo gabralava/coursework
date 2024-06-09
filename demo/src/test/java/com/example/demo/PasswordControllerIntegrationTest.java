@@ -40,7 +40,27 @@ public class PasswordControllerIntegrationTest {
     @WithMockUser(username = "newuser", password = "newpassword")
     public void testGetUserPasswords() throws Exception {
         mockMvc.perform(get("/passwords"))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+
+    @Test
+    @WithMockUser(username = "newuser", password = "newpassword")
+    public void testUpdatePassword() throws Exception {
+        String passwordJson = "{\"siteUrl\":\"http://example.com\", \"password\":\"newpassword\"}";
+        mockMvc.perform(put("/passwords/edit/12")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(passwordJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.password").value("newpassword"))
+                .andExpect(jsonPath("$.siteUrl").value("http://example.com"));
+    }
+
+    @Test
+    @WithMockUser(username = "newuser", password = "newpassword")
+    public void testDeletePassword() throws Exception {
+        mockMvc.perform(delete("/passwords/delete/5"))
+                .andExpect(status().isNoContent());
     }
 }
