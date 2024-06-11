@@ -3,6 +3,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.example.demo.model.Password;
+import com.example.demo.model.PasswordTemplate;
+import com.example.demo.model.User;
 import com.example.demo.repository.PasswordRepository;
 import com.example.demo.service.PasswordService;
 
@@ -46,8 +48,19 @@ public class PasswordServiceTest {
 
     @Test
     public void testGeneratePassword() {
-        String password = passwordService.generatePassword(10);
+        User user = new User();
+        user.setId(1L);
+
+        PasswordTemplate template = new PasswordTemplate();
+        template.setLength(8);
+        template.setIncludeLowercase(true);
+        template.setIncludeNumbers(false);
+        template.setIncludeSymbols(true);
+        template.setIncludeUppercase(false);
+        template.setUser(user);
+
+        String password = passwordService.generatePassword(template);
         assertNotNull(password);
-        assertEquals(10, password.length());
+        assertEquals(8, password.length());
     }
 }
