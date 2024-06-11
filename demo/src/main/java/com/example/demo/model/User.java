@@ -38,4 +38,13 @@ public class User {
     @JsonManagedReference
     private List<Password> passwords;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    public enum Role {
+        USER, 
+        ADMIN
+    }
+
 }

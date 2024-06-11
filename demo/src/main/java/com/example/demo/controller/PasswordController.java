@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Password;
 import com.example.demo.model.User;
+import com.example.demo.model.User.Role;
 import com.example.demo.service.PasswordService;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
@@ -66,7 +67,7 @@ public class PasswordController {
         Password existingPassword = passwordService.findById(id);
         if (existingPassword == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else if (!existingPassword.getUser().getId().equals(user.getId())) {
+        } else if (!existingPassword.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -85,7 +86,7 @@ public class PasswordController {
         Password existingPassword = passwordService.findById(id);
         if (existingPassword == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else if (!existingPassword.getUser().getId().equals(user.getId())) {
+        } else if (!existingPassword.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 

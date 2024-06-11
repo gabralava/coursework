@@ -31,12 +31,17 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: role
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    defaultValue: 'USER'
+              - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
-
   - changeSet:
       id: "2"
       author: georg

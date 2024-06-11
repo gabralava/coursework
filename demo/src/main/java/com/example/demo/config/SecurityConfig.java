@@ -31,9 +31,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login", "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/passwords/add", "/passwords/generate").authenticated()
-                .requestMatchers(HttpMethod.GET, "/passwords").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/passwords/edit/**").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/passwords/delete/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/passwords").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/passwords/edit/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/passwords/delete/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
