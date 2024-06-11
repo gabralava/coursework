@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.GeneratePasswordRequest;
 import com.example.demo.model.Password;
+import com.example.demo.model.PasswordTemplate;
 import com.example.demo.model.User;
 import com.example.demo.model.User.Role;
 import com.example.demo.service.PasswordService;
+import com.example.demo.service.PasswordTemplateService;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 
@@ -22,6 +25,7 @@ public class PasswordController {
 
     private final PasswordService passwordService;
     private final UserService userService;
+    private final PasswordTemplateService passwordTemplateService;
 
     @PostMapping("/add")
     public ResponseEntity<Password> addPassword(@RequestBody Password password) {
@@ -35,14 +39,23 @@ public class PasswordController {
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<Password> generatePassword(@RequestParam int length, @RequestParam String siteUrl) {
+    public ResponseEntity<Password> generatePassword(@RequestBody GeneratePasswordRequest request) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
 
-        String generatedPassword = passwordService.generatePassword(length);
+        PasswordTemplate template = passwordTemplateService.findById(request.getTemplateId())
+                .orElseThrow(() -> new RuntimeException("Template not found"));
+
+        if (template == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else if (!template.getUser().getId().equals(user.getId()) && !user.getRole().equals(Role.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        String generatedPassword = passwordService.generatePassword(template);
         Password password = new Password();
         password.setUser(user);
-        password.setSiteUrl(siteUrl);
+        password.setSiteUrl(request.getSiteUrl());
         password.setPassword(generatedPassword);
 
         Password savedPassword = passwordService.savePassword(password);

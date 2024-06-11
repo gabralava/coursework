@@ -30,10 +30,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login", "/auth/register").permitAll()
-                .requestMatchers(HttpMethod.POST, "/passwords/add", "/passwords/generate").authenticated()
-                .requestMatchers(HttpMethod.GET, "/passwords").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/passwords/edit/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/passwords/delete/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/passwords/add", "/passwords/generate", "/templates/create").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/passwords", "/templates", "/templates/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/passwords/edit/**", "/templates/edit/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/passwords/delete/**", "/templates/delete/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
